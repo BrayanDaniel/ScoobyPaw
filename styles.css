@@ -1,0 +1,1585 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Open+Sans:wght@400;600;700&display=swap');
+
+/* Reinicio de estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --main-color: #ff9100;
+    --main-color-dark: #cc7300;
+    --secondary-color: #335cff;
+    --text-color: #ffffff;
+    --dark-bg: #121212;
+    --panel-bg: rgba(30, 30, 30, 0.85);
+    --success-color: #4CAF50;
+    --warning-color: #FF9800;
+    --error-color: #F44336;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --glow: 0 0 15px rgba(255, 145, 0, 0.7);
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Efecto de fondo ambiental */
+.ambient-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(76, 0, 155, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(255, 145, 0, 0.1), transparent 40%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Contenedor principal del juego */
+.game-container {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Pantallas generales */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1), 
+                opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateX(100%);
+    opacity: 0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.screen.active {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Pantalla de título */
+.title-screen {
+    position: relative;
+}
+
+.title-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://i.imgur.com/6W2DjBB.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    z-index: -1;
+}
+
+.title-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+    z-index: 0;
+}
+
+.title-content-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.title-content {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 145, 0, 0.3);
+    z-index: 2;
+}
+
+.title-character {
+    display: none;
+}
+
+.title-smaller {
+    font-size: 0.7em;
+    vertical-align: middle;
+    opacity: 0.8;
+}
+
+.mystery-title {
+    margin-top: -10px;
+    font-size: 3rem;
+}
+
+.subtitle {
+    margin: 20px 0;
+    font-size: 1.2rem;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+}
+
+/* Badges de información del juego */
+.game-info {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.info-badge {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--main-color);
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.final-rating {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255, 145, 0, 0.2);
+    border-left: 4px solid var(--main-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Encabezados */
+h1 {
+    font-family: 'Creepster', cursive;
+    font-size: 4rem;
+    color: var(--main-color);
+    text-shadow: 2px 2px 4px #000, 0 0 20px #ff6a00, 0 0 30px #ff4500;
+    margin-bottom: 20px;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.ghost-icon {
+    animation: float 3s ease-in-out infinite;
+    display: inline-block;
+    margin-right: 0.3em;
+    color: #ff9100;
+}
+
+h2 {
+    font-family: 'Creepster', cursive;
+    font-size: 2.5rem;
+    color: var(--main-color);
+    text-shadow: 2px 2px 4px #000;
+    margin: 20px 0;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin: 15px 0;
+    color: var(--secondary-color);
+}
+
+/* Nombre de la habitación */
+.room-name {
+    position: absolute;
+    top: -10px; /* Moverlo más arriba */
+    left: 20px;
+    font-size: 1.8rem;
+    text-shadow: 2px 2px 4px #000;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--main-color);
+    z-index: 85;
+}
+
+/* Indicador de nivel */
+.level-indicator {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    text-shadow: 2px 2px 4px #000;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;  /* Aumentar z-index para evitar superposiciones */
+}
+
+.level-indicator:before {
+    content: '\f5fd';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--main-color);
+}
+
+.scared {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px) rotate(-1deg); }
+    20%, 40%, 60%, 80% { transform: translateX(5px) rotate(1deg); }
+}
+
+
+/* Opciones */
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 6;
+    width: 100%;
+}
+
+.option {
+    background-color: rgba(50, 50, 50, 0.9);
+    border: 2px solid var(--main-color);
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+    color: white;
+}
+
+.option:hover {
+    background-color: rgba(80, 80, 80, 0.9);
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.option:active {
+    transform: translateY(0) scale(0.99);
+}
+
+.option:before {
+    content: '\f111';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 400;
+    margin-right: 10px;
+    color: var(--main-color);
+    transition: all 0.2s ease;
+}
+
+.option:hover:before {
+    content: '\f192';
+    font-weight: 900;
+}
+
+.correct {
+    background-color: rgba(0, 150, 0, 0.8);
+    border-color: var(--success-color);
+    animation: pulse 0.5s ease-in-out;
+}
+
+.correct:before {
+    content: '\f058' !important;
+    color: #fff;
+    font-weight: 900;
+}
+
+.incorrect {
+    background-color: rgba(150, 0, 0, 0.8);
+    border-color: var(--error-color);
+    animation: shake 0.5s ease-in-out;
+}
+
+.incorrect:before {
+    content: '\f057' !important;
+    color: #fff;
+    font-weight: 900;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Botones */
+.btn {
+    background-color: var(--main-color);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 30px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.2s ease;
+    font-weight: bold;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn:hover {
+    background-color: #ffb347;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Mover el botón View Clues más abajo y centrarlo */
+
+/* Ajustar el comportamiento hover del botón View Clues */
+.btn-hint {
+    position: absolute;
+    top: auto;
+    bottom: 400px;
+    right: 60px;
+    background-color: var(--main-color-dark);
+    padding: 10px 20px;
+    font-size: 1rem;
+    z-index: 50;
+    transition: all 0.2s ease; /* Transición suave */
+}
+
+.btn-hint:hover {
+    background-color: #4370ff; /* Color ligeramente más claro */
+    transform: translateY(-3px); /* Movimiento sutil hacia arriba */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Si el botón tiene otro nombre de clase, ajústalo según corresponda */
+.view-clues-btn:hover,
+button[id*="clue"]:hover {
+    transform: translateY(-3px) !important; /* Sobrescribir cualquier transformación agresiva */
+    margin: 0 !important; /* Evitar cambios de margen al pasar el mouse */
+}
+
+.share-btn {
+    background-color: #4267B2;
+    color: white;
+}
+
+.share-btn:hover {
+    background-color: #365899;
+}
+
+/* Pulsación animada para botón principal */
+.pulse-animation {
+    animation: pulsate 2s infinite;
+}
+
+@keyframes pulsate {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 145, 0, 0.7); }
+    70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(255, 145, 0, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 145, 0, 0); }
+}
+
+/* Contenedor de pistas */
+.hint-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--main-color);
+    border-radius: 15px;
+    padding: 25px;
+    width: 70%;
+    max-width: 600px;
+    max-height: 80vh;
+    z-index: 10;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: var(--shadow), var(--glow);
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollable-content {
+    overflow-y: auto;
+    max-height: 60vh;
+    margin: 15px 0;
+    padding-right: 10px;
+}
+
+.hint-container.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 5;
+    display: none;
+    backdrop-filter: blur(3px);
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* Elementos de pistas */
+.clue-item {
+    text-align: left;
+    margin: 15px 0;
+    padding: 15px;
+    background-color: rgba(50, 50, 50, 0.8);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.clue-item.revealed {
+    background-color: rgba(80, 80, 80, 0.8);
+    border-left-color: var(--main-color);
+    animation: slideIn 0.5s ease-out;
+}
+
+.clue-item.revealed::before {
+    content: "\f002";
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-right: 10px;
+    color: var(--main-color);
+}
+
+@keyframes slideIn {
+    0% { transform: translateX(-20px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+/* Campo de entrada */
+.input-container {
+    margin: 25px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-container label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-field {
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    border: 2px solid var(--main-color);
+    background-color: rgba(30, 30, 30, 0.8);
+    color: var(--text-color);
+    width: 300px;
+    max-width: 100%;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.input-field:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(51, 92, 255, 0.3);
+}
+
+/* Efectos de celebración */
+.celebration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+    display: none;
+}
+
+.celebration.active {
+    display: block;
+}
+
+.confetti {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: #f00;
+    opacity: 0.7;
+    animation: fall 5s linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(100vh + 100px)) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Fuegos artificiales para la pantalla final */
+.fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Barra de progreso */
+.progress-container {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 20px;
+    background-color: rgba(50, 50, 50, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow);
+    z-index: 90;  /* Aumentar z-index pero por debajo del level-indicator */
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #ff8a00, #ff9100, #ffa700);
+    width: 0%;
+    transition: width 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: sheen 2s infinite;
+}
+
+@keyframes sheen {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+    color: white;
+    white-space: nowrap;
+}
+
+/* Insignia de dificultad */
+/* Asegurar que Easy está bien posicionado */
+.difficulty-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px; /* Reducir este valor para moverlo más a la derecha */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow);
+    z-index: 99; /* Aumentar z-index para asegurar que esté encima de todo */
+}
+
+.difficulty-badge:before {
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    z-index: 98;
+}
+
+.difficulty-easy {
+    background-color: var(--success-color);
+}
+.difficulty-easy:before {
+    content: '\f005';
+}
+
+.difficulty-medium {
+    background-color: var(--warning-color);
+}
+.difficulty-medium:before {
+    content: '\f005\f005';
+}
+
+.difficulty-hard {
+    background-color: var(--error-color);
+}
+.difficulty-hard:before {
+    content: '\f005\f005\f005';
+}
+
+/* Controles flotantes */
+.floating-controls {
+    position: fixed;
+    top: 95px;  /* Mover hacia abajo para evitar superposición con nivel */
+    left: 20px;
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+}
+
+.floating-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: 2px solid var(--main-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow);
+}
+
+.floating-btn:hover {
+    transform: scale(1.1);
+    background-color: rgba(30, 30, 30, 0.9);
+    border-color: #ffb347;
+}
+
+.volume-wrapper {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    padding: 15px 10px;
+    border: 2px solid var(--main-color);
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50px;
+    height: 150px;
+    box-shadow: var(--shadow);
+}
+
+.volume-slider {
+    width: 120px;
+    height: 5px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    outline: none;
+    transform: rotate(-90deg);
+    margin: 50px 0;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--main-color);
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--main-color);
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Panel de instrucciones */
+.instruction-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.instruction-panel.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.instruction-content {
+    background-color: var(--panel-bg);
+    border-radius: 15px;
+    border: 2px solid var(--main-color);
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow), var(--glow);
+}
+
+.grammar-box {
+    background-color: rgba(51, 92, 255, 0.1);
+    border: 1px solid var(--secondary-color);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.instruction-content ul {
+    text-align: left;
+    padding-left: 20px;
+    margin: 15px 0;
+}
+
+.instruction-content li {
+    margin-bottom: 8px;
+    position: relative;
+    list-style-type: none;
+    padding-left: 25px;
+}
+
+.instruction-content li:before {
+    content: '\f35a';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    color: var(--main-color);
+}
+
+/* Preloader */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--dark-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+.preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader {
+    width: 70px;
+    height: 70px;
+    border: 5px solid rgba(255, 145, 0, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--main-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.preloader p {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    letter-spacing: 2px;
+}
+
+/* Animaciones adicionales */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.bounce-animation {
+    animation: bounce 3s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Lista de pistas en la pantalla final */
+.discovered-clues-section {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--main-color);
+    width: 90%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 80px; /* Espacio extra al final */
+}
+
+.discovered-clues-title {
+    color: #3498db; /* Color azul para el título */
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-align: left;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+/* Mejorar apariencia de las pistas */
+.clues-final {
+    text-align: left;
+    list-style-type: none;
+    margin: 15px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+.clues-final li {
+    background-color: rgba(50, 50, 50, 0.8);
+    margin: 10px 0;
+    padding: 15px 15px 15px 40px; /* Aumentar padding izquierdo para icono */
+    border-radius: 8px;
+    position: relative;
+    border-left: 3px solid var(--main-color);
+    transition: all 0.3s ease;
+}
+
+.clues-final li:before {
+    content: "\f002";
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 10px;
+    color: var(--main-color);
+    font-size: 1.2rem;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .title-screen {
+        flex-direction: column-reverse;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .title-content {
+        max-width: 100%;
+        margin: 0;
+        text-align: center;
+    }
+    
+    .title-character {
+        margin: 0 0 20px 0;
+    }
+    
+    .title-character img {
+        max-height: 200px;
+    }
+    
+    h1 {
+        font-size: 3rem;
+    }
+    
+    .mystery-title {
+        font-size: 2.2rem;
+    }
+    
+    .game-info {
+        justify-content: center;
+    }
+    
+    .input-container {
+        align-items: center;
+    }
+}
+
+/* Estilos para scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--main-color-dark);
+}
+
+/* Código para fuegos artificiales en la pantalla final */
+.pyro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.pyro > .before, .pyro > .after {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+    animation: 1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards;
+}
+
+.pyro > .after {
+    animation-delay: 1.25s, 1.25s, 1.25s;
+    animation-duration: 1.25s, 1.25s, 6.25s;
+}
+
+@keyframes bang {
+    to {
+        box-shadow: -70px -115.67px #00ff84, 56px -53.67px #ffc400, 240px -101.67px #ff009d, 190px 7.33px #00ffcc, -128px -91.67px #ff4800, -140px -70.67px #ff00d0, -110px -4.67px #ff8800, 120px -162.67px #ff00d9, -230px -65.67px #ff0088, 20px -163.67px #00ff8c;
+    }
+}
+
+@keyframes gravity {
+    to {
+        transform: translateY(200px);
+        opacity: 0;
+    }
+}
+
+@keyframes position {
+    0%, 19.9% {
+        margin-top: 10%;
+        margin-left: 40%;
+    }
+    20%, 39.9% {
+        margin-top: 40%;
+        margin-left: 30%;
+    }
+    40%, 59.9% {
+        margin-top: 20%;
+        margin-left: 70%;
+    }
+    60%, 79.9% {
+        margin-top: 30%;
+        margin-left: 20%;
+    }
+    80%, 99.9% {
+        margin-top: 30%;
+        margin-left: 80%;
+    }
+}
+
+/* Fondo para la pantalla de título */
+.title-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('images/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 1; /* Cambiado de 0.7 a 1 para mejor visibilidad */
+    z-index: -1;
+}
+
+.title-content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Mejora del contenedor de preguntas para mostrar imágenes */
+.question-container {
+    margin-top: 100px;  /* Moverlo más abajo para evitar chocar con la barra de progreso */
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid var(--main-color);
+    border-radius: 15px;
+    padding: 25px;
+    width: 60%;
+    max-width: 600px;  /* Reducir ancho máximo */
+    position: relative;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 5;
+    margin-left: auto;
+    margin-right: auto;  /* Centrar el contenedor */
+}
+
+.question {
+    color: var(--main-color);
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Make the question image larger */
+.question-image {
+    width: 400px;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--main-color);
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+
+/* El fondo de pregunta existente lo mantenemos con opacidad baja */
+.question-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px);
+    opacity: 0.15; /* Reducida a 0.15 */
+    transition: all 0.5s ease;
+    border-radius: 12px;
+}
+
+/* Ajuste al layout de habitación */
+.room-screen {
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    padding-top: 0;
+}
+
+/* Ajustar posición del personaje y cuadro de diálogo */
+/* Ajustar posición del cuadro de diálogo de pista */
+/* Ajustar posición del cuadro de diálogo/pista */
+.dialog-box {
+    position: absolute;
+    bottom: 250px; /* Mover mucho más arriba para que no tape al personaje */
+    left: 20px;
+    width: 250px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--main-color);
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 1.2rem;
+    min-height: 80px;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.3s ease-out;
+    z-index: 10;
+}
+
+/* Ajustar la flecha del cuadro de diálogo */
+.dialog-box:before {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid var(--main-color);
+}
+
+/* Asegurar que el personaje y la pista estén bien posicionados juntos */
+.character {
+    position: absolute;
+    bottom: 20px;
+    left: 70px;
+    width: 150px;
+    filter: drop-shadow(2px 2px 10px rgba(0, 0, 0, 0.8));
+    transition: transform 0.5s ease;
+    z-index: 4;
+}
+
+/* Ajustes para la pantalla final */
+.final-screen {
+    padding-top: 120px; /* Aumentar padding para dejar espacio al título */
+    justify-content: flex-start; /* Alinear contenido desde arriba */
+    align-items: center;
+    overflow-y: auto; /* Permitir scroll si es necesario */
+}
+
+/* Mejorar el contenedor del mensaje final */
+.final-message-container {
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 25px;
+    border-radius: 15px;
+    border: 2px solid var(--main-color);
+    max-width: 800px;
+    width: 90%;
+    margin: 10px auto; /* Reducir margen */
+    text-align: left;
+    box-shadow: var(--shadow), 0 0 20px rgba(255, 145, 0, 0.3);
+}
+
+/* Mejorar el certificado */
+.achievement-certificate {
+    background: linear-gradient(135deg, #2c3e50, #4a6572);
+    border: 5px solid #ffb347;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.certificate-title {
+    font-family: 'Creepster', cursive;
+    font-size: 2rem;
+    color: #ffb347;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.certificate-seal {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+    width: 80px;
+    height: 80px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.certificate-seal i {
+    font-size: 2.5rem;
+    color: #fff;
+}
+
+/* Para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .question-image {
+        width: 250px;
+        height: 140px;
+    }
+    
+    .question-container {
+        margin-top: 130px;
+        width: 90%;
+    }
+    
+    .character {
+        width: 120px;
+        left: 20px;
+    }
+    
+    .dialog-box {
+        left: 150px;
+        right: 20px;
+    }
+}
+
+/* Ocultar el botón de signo de interrogación durante el juego */
+.room-screen .help-btn,
+.room-screen + .help-btn {
+    display: none !important;
+}
+
+/* Mejorar botones de la pantalla final */
+.final-screen .btn {
+    margin: 10px;
+    font-size: 1.1rem;
+}
+
+.final-screen .btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Ajustar título principal */
+.final-screen h1 {
+    margin-bottom: 10px;
+}
+
+/* Animar el certificado */
+.achievement-certificate {
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 10px rgba(255, 145, 0, 0.5); }
+    100% { box-shadow: 0 0 20px rgba(255, 145, 0, 0.8), 0 0 30px rgba(255, 145, 0, 0.5); }
+}
+
+
+/* Botón "Play Again" en la esquina inferior derecha */
+.play-again-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 55px;
+    background-color: var(--main-color);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: bold;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    z-index: 50;
+}
+
+.play-again-btn:hover {
+    background-color: #ffb347;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.play-again-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal de confirmación personalizado */
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.confirm-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.confirm-content {
+    background-color: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--main-color);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 145, 0, 0.7);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.confirm-title {
+    color: var(--main-color);
+    font-family: 'Creepster', cursive;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.confirm-message {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirm-btn {
+    background-color: var(--main-color);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.confirm-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.confirm-btn.confirm-yes {
+    background-color: #ff9100;
+}
+
+.confirm-btn.confirm-no {
+    background-color: #444;
+    color: white;
+}
+
+/* Add these styles to your existing CSS file */
+
+/* Share Score Modal */
+.share-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(3px);
+}
+
+.share-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.share-content {
+    background-color: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--main-color);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 145, 0, 0.7);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.share-title {
+    color: var(--main-color);
+    font-family: 'Creepster', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.share-message {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.share-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.share-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+
+.share-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.facebook-share {
+    background-color: #4267B2;
+}
+
+.facebook-share:hover {
+    background-color: #365899;
+}
+
+.twitter-share {
+    background-color: #1DA1F2;
+}
+
+.twitter-share:hover {
+    background-color: #0d8ecf;
+}
+
+.email-share {
+    background-color: #6b5b95;
+}
+
+.email-share:hover {
+    background-color: #574a79;
+}
+
+.copy-link {
+    background-color: #28a745;
+}
+
+.copy-link:hover {
+    background-color: #218838;
+}
+
+.share-close {
+    margin-top: 15px;
+    background-color: var(--main-color);
+    color: black;
+}
+
+.share-close:hover {
+    background-color: #ffb347;
+}
+
+/* Animation for the modal */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .share-content {
+        padding: 20px;
+        width: 85%;
+    }
+    
+    .share-title {
+        font-size: 2rem;
+    }
+    
+    .share-message {
+        font-size: 1rem;
+    }
+    
+    .share-btn {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+}
