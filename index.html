@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoobi Paw and the Mystery of the Abandoned Mansion</title>
+    <link rel="icon" type="image/png" href="images/character.png">
+    <link rel="icon" type="image/png" href="images/character.png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts para tipografías especiales -->
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Estilos del juego -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Efecto de fondo de ambientación -->
+    <div class="ambient-overlay"></div>
+
+    <!-- Contenedor principal del juego -->
+    <div class="game-container">
+        <!-- Pantalla de título -->
+        <div class="screen title-screen active">
+            <!-- Imagen de fondo para la pantalla de inicio -->
+            <div class="title-background"></div>
+            
+            <!-- Contenedor del contenido de la pantalla de inicio -->
+            <div class="title-content-wrapper">
+                <div class="title-content">
+                    <h1><i class="fas fa-ghost ghost-icon"></i> Scoobi Paw <span class="title-smaller">and the</span></h1>
+                    <h1 class="mystery-title">Mystery of the Abandoned Mansion</h1>
+                    <p class="subtitle">Help Scoobi Paw solve the mystery by answering present perfect continuous questions.</p>
+                    <div class="input-container">
+                        <label for="player-name"><i class="fas fa-user-detective"></i> Detective's Name:</label>
+                        <input type="text" class="input-field" id="player-name" placeholder="Enter your name" autocomplete="off">
+                    </div>
+                    <button class="btn pulse-animation" id="start-btn"><i class="fas fa-play"></i> Start Adventure!</button>
+                    
+                    <!-- Badges para información del juego -->
+                    <div class="game-info">
+                        <div class="info-badge"><i class="fas fa-question-circle"></i> 24 Questions</div>
+                        <div class="info-badge"><i class="fas fa-layer-group"></i> 4 Levels</div>
+                        <div class="info-badge"><i class="fas fa-door-closed"></i> 8 Rooms</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pantallas de habitación (se crearán dinámicamente con JavaScript) -->
+        
+        <!-- Pantalla final -->
+        <div class="screen final-screen">
+            <div class="fireworks-container" id="fireworks"></div>
+            <h1><i class="fas fa-medal"></i> Mystery Solved!</h1>
+            <div id="final-message" class="final-message-container"></div>
+            <div class="btn-container">
+                <button class="btn" id="restart-btn"><i class="fas fa-redo"></i> Play Again</button>
+                <button class="btn share-btn"><i class="fas fa-share-alt"></i> Share Score</button>
+            </div>
+        </div>
+
+        <!-- Contenedor de pistas -->
+        <div class="hint-container">
+            <h2><i class="fas fa-search"></i> Discovered Clues</h2>
+            <div id="clues-list" class="scrollable-content"></div>
+            <button class="btn" id="close-hint-btn">Close</button>
+        </div>
+
+        <!-- Overlay para pistas y pantallas modales -->
+        <div class="overlay"></div>
+
+        <!-- Efectos de celebración -->
+        <div class="celebration" id="celebration"></div>
+        
+        <!-- Controles flotantes siempre visibles (aparecen durante el juego) -->
+        <div class="floating-controls" id="floating-controls">
+            <button class="floating-btn sound-toggle" id="sound-toggle" title="Toggle Sound Effects">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <button class="floating-btn music-toggle" id="music-toggle" title="Toggle Music">
+                <i class="fas fa-music"></i>
+            </button>
+            <div class="volume-wrapper">
+                <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50" title="Volume">
+            </div>
+            <button class="floating-btn help-btn question-mark-btn" id="help-btn" title="Instructions">
+                <i class="fas fa-question-circle"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Panel de instrucciones -->
+    <div class="instruction-panel" id="instruction-panel">
+        <div class="instruction-content">
+            <h2><i class="fas fa-book"></i> Game Instructions</h2>
+            <p>Help Scoobi Paw solve the mystery of the abandoned mansion by answering questions about the <strong>Present Perfect Continuous</strong> tense in English.</p>
+            
+            <h3><i class="fas fa-graduation-cap"></i> Grammar Guide</h3>
+            <div class="grammar-box">
+                <p><strong>Form:</strong> subject + <em>has/have been</em> + verb-ing</p>
+                <p><strong>Example:</strong> "The wind <u>has been blowing</u>" (correct)</p>
+                <p><strong>Common mistakes:</strong> "The wind <u>have been blowing</u>" or "The wind <u>has blew</u>" (incorrect)</p>
+            </div>
+            
+            <h3><i class="fas fa-gamepad"></i> How to Play</h3>
+            <ul>
+                <li>Explore each room and answer the questions correctly</li>
+                <li>Each correct answer will get you closer to solving the mystery</li>
+                <li>Complete rooms to discover important clues</li>
+                <li>The difficulty increases as you progress through levels</li>
+            </ul>
+            
+            <button class="btn" id="close-instructions-btn">Got it!</button>
+        </div>
+    </div>
+
+    <!-- Sonidos -->
+    <!-- Efectos de sonido -->
+    <audio id="correct-sound" src="efectos/correct-6033.mp3" preload="auto"></audio>
+    <audio id="wrong-sound" src="efectos/wrong-answer-126515.mp3" preload="auto"></audio>
+    <audio id="level-complete-sound" src="efectos/success-1-6297.mp3" preload="auto"></audio>
+    <audio id="game-complete-sound" src="efectos/success-fanfare-trumpets-6185.mp3" preload="auto"></audio>
+    <audio id="hint-sound" src="efectos/notification-sound-7062.mp3" preload="auto"></audio>
+    <audio id="click-sound" src="efectos/mouse-click-153941.mp3" preload="auto"></audio>
+    
+    <!-- Música de fondo -->
+    <audio id="background-music" src="efectos/mid-nights-sound-291477.mp3" loop preload="auto"></audio>
+    
+    <!-- Sonidos ambientales para cada habitación -->
+    <audio id="attic-ambience" src="efectos/sunny-day-outside-dia-soleado-exterior-6858.mp3" loop preload="auto"></audio>
+    <audio id="library-ambience" src="efectos/roomtone-bedroom-small-quiet-6754.mp3" loop preload="auto"></audio>
+    <audio id="dining-ambience" src="efectos/crispy-and-crunchy-eating-cookies-or-bread-from-a-plate-asmr-8266.mp3" loop preload="auto"></audio>
+    <audio id="basement-ambience" src="efectos/basement-75082.mp3" loop preload="auto"></audio>
+    <audio id="gallery-ambience" src="efectos/ambience-236734.mp3" loop preload="auto"></audio>
+    <audio id="study-ambience" src="efectos/rainstorm-with-birds-distant-thunder-car-19370.mp3" loop preload="auto"></audio>
+    
+    <!-- Preloader para mostrar mientras el juego carga -->
+    <div class="preloader" id="preloader">
+        <div class="loader"></div>
+        <p>Loading Mystery...</p>
+    </div>
+
+    <!-- Modal de confirmación personalizado -->
+<div class="confirm-modal" id="confirm-modal">
+    <div class="confirm-content">
+        <h2 class="confirm-title">¿Estás seguro?</h2>
+        <p class="confirm-message">¿Quieres reiniciar el juego? Tu progreso actual se perderá.</p>
+        <div class="confirm-buttons">
+            <button class="confirm-btn confirm-no" id="confirm-no">No, continuar</button>
+            <button class="confirm-btn confirm-yes" id="confirm-yes">Sí, reiniciar</button>
+        </div>
+    </div>
+</div>
+
+<div class="share-modal" id="share-modal">
+    <div class="share-content">
+        <h2 class="share-title"><i class="fas fa-share-alt"></i> Share Your Score</h2>
+        <p class="share-message">I solved the mystery with <span id="share-score-count">24</span> correct answers out of 24 in Scoobi Paw's Mansion Adventure!</p>
+        <div class="share-buttons">
+            <button class="share-btn facebook-share"><i class="fab fa-facebook-f"></i> Share on Facebook</button>
+            <button class="share-btn twitter-share"><i class="fab fa-twitter"></i> Share on Twitter</button>
+            <button class="share-btn email-share"><i class="fas fa-envelope"></i> Share by Email</button>
+            <button class="share-btn copy-link"><i class="fas fa-copy"></i> Copy Text</button>
+        </div>
+        <button class="btn share-close" id="share-close-btn">Close</button>
+    </div>
+</div>
+
+    <!-- Script principal del juego -->
+    <script src="script.js"></script>
+</body>
+</html>
