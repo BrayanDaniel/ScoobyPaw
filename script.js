@@ -1,5 +1,10 @@
 
 
+let correctAnswersInCurrentRoom = 0;
+const requiredCorrectAnswers = 2;
+
+
+
 // Share functionality
 document.addEventListener('DOMContentLoaded', function() {
     const shareBtn = document.querySelector('.share-btn');
@@ -406,10 +411,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Modificar la función showCurrentRoom para incluir ajuste de posiciones
 const originalShowCurrentRoom = showCurrentRoom;
-showCurrentRoom = function() {
-    originalShowCurrentRoom();
-    setTimeout(adjustElementPositions, 100);
-};
+    showCurrentRoom = function() {
+        originalShowCurrentRoom();
+        
+        setTimeout(ensureProperPositioning, 10);
+        // Update the current room screen with our improved indicators
+        const currentRoomScreen = roomScreens.find(screen => 
+            parseInt(screen.dataset.level) === currentLevel && 
+            parseInt(screen.dataset.room) === currentRoom
+        );
+        
+        if (currentRoomScreen) {
+            // Ensure the tooltip is properly positioned
+            createRequirementTooltip(currentRoomScreen);
+            updateRoomProgress();
+        }
+    };
 
 // Limpia elementos duplicados para evitar problemas
 function cleanupDuplicateElements() {
@@ -556,10 +573,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar el administrador de audio
     AudioManager.init();
     
-    // Reemplazar llamadas directas a métodos de audio por llamadas a AudioManager
-    // Por ejemplo:
-    // En lugar de correctSound.play(), usar AudioManager.play('correct-sound')
-    // En lugar de backgroundMusic.pause(), usar AudioManager.pause('background-music')
 });
 
 
@@ -597,14 +610,12 @@ const gameData = {
             rooms: [
                 {
                     name: "The Haunted Attic",
-                    background: "images/main-room.jpg", // Main room background
-                    // NOTE: Replace this URL with your own image for the attic room background
+                    background: "images/main-room.jpg", 
                     ambience: "attic-ambience",
                     questions: [
                         {
                             text: "Why is there dust in the air?",
                             background: "images/dust.jpg", 
-                            // NOTE: Replace this URL with your own image of dust particles in an attic
                             options: [
                                 { text: "The wind has been blowing inside.", correct: true },
                                 { text: "The wind have been blowing inside.", correct: false },
@@ -614,20 +625,18 @@ const gameData = {
                         {
                             text: "Why have the windows been rattling?",
                             background: "images/windows-been-rattling.jpg", 
-                            // NOTE: Replace this URL with your own image of rattling windows
                             options: [
-                                { text: "The wind has been shaking them.", correct: true },
                                 { text: "The wind have been shaking them.", correct: false },
+                                { text: "The wind has been shaking them.", correct: true },
                                 { text: "The wind has shaked them.", correct: false }
                             ]
                         },
                         {
                             text: "Why are the curtains moving?",
                             background: "images/curtains-moving.jpg", 
-                            // NOTE: Replace this URL with your own image of moving curtains
                             options: [
-                                { text: "The ghost has been playing with them.", correct: true },
                                 { text: "The ghost have been playing with them.", correct: false },
+                                { text: "The ghost has been playing with them.", correct: true },
                                 { text: "The ghost has played with them.", correct: false }
                             ]
                         }
@@ -636,34 +645,31 @@ const gameData = {
                 },
                 {
                     name: "The Dusty Library",
-                    background: "images/main-library.jpg", // Main library background
-                    // NOTE: Replace this URL with your own image for the library room background
+                    background: "images/main-library.jpg", 
                     ambience: "library-ambience",
                     questions: [
                         {
                             text: "Why are there so many books on the floor?",
                             background: "images/books-floor.jpg", 
-                            // NOTE: Replace this URL with your own image of books on the floor
                             options: [
-                                { text: "The shelves have been shaking.", correct: true },
+                                { text: "The shelves have shook.", correct: false },
                                 { text: "The shelves has been shaking.", correct: false },
-                                { text: "The shelves have shook.", correct: false }
+                                { text: "The shelves have been shaking.", correct: true }
+                                
                             ]
                         },
                         {
                             text: "Why is the old desk covered in dust?",
                             background: "images/dusty-desk.jpg", 
-                            // NOTE: Replace this URL with your own image of a dusty desk
                             options: [
-                                { text: "No one has been using it for years.", correct: true },
+                                { text: "No one has used it for years.", correct: false },
                                 { text: "No one have been using it for years.", correct: false },
-                                { text: "No one has used it for years.", correct: false }
+                                { text: "No one has been using it for years.", correct: true }
                             ]
                         },
                         {
                             text: "Why are there candle marks on the table?",
                             background: "images/candle-marks.jpg", 
-                            // NOTE: Replace this URL with your own image of candle marks on a table
                             options: [
                                 { text: "Someone has been reading at night.", correct: true },
                                 { text: "Someone have been reading at night.", correct: false },
@@ -681,14 +687,12 @@ const gameData = {
             rooms: [
                 {
                     name: "The Abandoned Dining Room",
-                    background: "images/dining-room-background.jpg", // Main dining room background
-                    // NOTE: Replace this URL with your own image for the dining room background
+                    background: "images/dining-room-background.jpg", 
                     ambience: "dining-ambience",
                     questions: [
                         {
                             text: "Why is the table such a mess?",
                             background: "images/dining-table.jpg", 
-                            // NOTE: Replace this URL with your own image of a messy dining table
                             options: [
                                 { text: "Someone has been throwing the dishes.", correct: true },
                                 { text: "Someone have been throwing the dishes.", correct: false },
@@ -698,17 +702,15 @@ const gameData = {
                         {
                             text: "Why is the chandelier still moving?",
                             background: "images/moving-chandelier.jpg", 
-                            // NOTE: Replace this URL with your own image of a moving chandelier
                             options: [
-                                { text: "The wind has been shaking it.", correct: true },
                                 { text: "The wind have been shaking it.", correct: false },
+                                { text: "The wind has been shaking it.", correct: true },
                                 { text: "The wind has shook it.", correct: false }
                             ]
                         },
                         {
                             text: "Why are there fresh footprints on the carpet?",
                             background: "images/footprints-on-carpet.jpg", 
-                            // NOTE: Replace this URL with your own image of footprints on carpet
                             options: [
                                 { text: "Someone has been searching for something.", correct: true },
                                 { text: "Someone have been searching for something.", correct: false },
@@ -720,24 +722,21 @@ const gameData = {
                 },
                 {
                     name: "The Dark Basement",
-                    background: "images/basement-background.jpg", // Main basement background
-                    // NOTE: Replace this URL with your own image for the basement background
+                    background: "images/basement-background.jpg", 
                     ambience: "basement-ambience",
                     questions: [
                         {
                             text: "Why is the floor wet?",
                             background: "images/wet-floor.jpg", 
-                            // NOTE: Replace this URL with your own image of a wet floor
                             options: [
-                                { text: "The pipes have been leaking.", correct: true },
                                 { text: "The pipes has been leaking.", correct: false },
+                                { text: "The pipes have been leaking.", correct: true },
                                 { text: "The pipes have leaked.", correct: false }
                             ]
                         },
                         {
                             text: "Why are the lights flickering?",
                             background: "images/flickering-lights.jpg", 
-                            // NOTE: Replace this URL with your own image of flickering lights
                             options: [
                                 { text: "Someone has been playing with the switch.", correct: true },
                                 { text: "Someone have been playing with the switch.", correct: false },
@@ -747,11 +746,10 @@ const gameData = {
                         {
                             text: "Why does the old couch smell strange?",
                             background: "images/old-couch.jpg", 
-                            // NOTE: Replace this URL with your own image of an old couch
                             options: [
-                                { text: "A wet dog has been sleeping on it.", correct: true },
                                 { text: "A wet dog have been sleeping on it.", correct: false },
-                                { text: "A wet dog has slept on it.", correct: false }
+                                { text: "A wet dog has slept on it.", correct: false },
+                                { text: "A wet dog has been sleeping on it.", correct: true }
                             ]
                         }
                     ],
@@ -765,34 +763,30 @@ const gameData = {
             rooms: [
                 {
                     name: "The Portrait Gallery",
-                    background: "images/gallery-background.jpg", // Main gallery background
-                    // NOTE: Replace this URL with your own image for the gallery background
+                    background: "images/gallery-background.jpg", 
                     ambience: "gallery-ambience",
                     questions: [
                         {
                             text: "Why are the paintings tilted?",
                             background: "images/tilted-paintings.jpg", 
-                            // NOTE: Replace this URL with your own image of tilted paintings
                             options: [
-                                { text: "Someone has been touching them.", correct: true },
                                 { text: "Someone have been touching them.", correct: false },
-                                { text: "Someone has touched them.", correct: false }
+                                { text: "Someone has touched them.", correct: false },
+                                { text: "Someone has been touching them.", correct: true }
                             ]
                         },
                         {
                             text: "Why is there a secret door behind the bookshelf?",
                             background: "images/secret-door.jpg", 
-                            // NOTE: Replace this URL with your own image of a secret door
                             options: [
-                                { text: "Someone has been pushing the bookshelf.", correct: true },
                                 { text: "Someone have been pushing the bookshelf.", correct: false },
+                                { text: "Someone has been pushing the bookshelf.", correct: true },
                                 { text: "Someone has pushed the bookshelf.", correct: false }
                             ]
                         },
                         {
                             text: "Why is there an open window?",
                             background: "images/open-windows.jpg", 
-                            // NOTE: Replace this URL with your own image of an open window
                             options: [
                                 { text: "The thief has been escaping through it.", correct: true },
                                 { text: "The thief have been escaping through it.", correct: false },
@@ -804,34 +798,30 @@ const gameData = {
                 },
                 {
                     name: "The Secret Study",
-                    background: "images/study-background.jpg", // Main study background
-                    // NOTE: Replace this URL with your own image for the study background
+                    background: "images/study-background.jpg", 
                     ambience: "study-ambience",
                     questions: [
                         {
                             text: "Why is the chair still warm?",
                             background: "images/warm-chair.jpg", 
-                            // NOTE: Replace this URL with your own image of a warm chair
                             options: [
-                                { text: "Someone has been sitting here recently.", correct: true },
                                 { text: "Someone have been sitting here recently.", correct: false },
-                                { text: "Someone has sat here recently.", correct: false }
+                                { text: "Someone has sat here recently.", correct: false },
+                                { text: "Someone has been sitting here recently.", correct: true }
                             ]
                         },
                         {
                             text: "Why are there fresh footprints on the floor?",
                             background: "images/footprints.jpg", 
-                            // NOTE: Replace this URL with your own image of footprints
                             options: [
-                                { text: "Someone has been walking around.", correct: true },
                                 { text: "Someone have been walking around.", correct: false },
+                                { text: "Someone has been walking around.", correct: true },
                                 { text: "Someone has walked around.", correct: false }
                             ]
                         },
                         {
                             text: "Why is there a strange noise coming from the chimney?",
                             background: "images/chimney.jpg", 
-                            // NOTE: Replace this URL with your own image of a chimney
                             options: [
                                 { text: "The wind has been blowing through it all night.", correct: true },
                                 { text: "The wind have been blowing through it all night.", correct: false },
@@ -849,14 +839,12 @@ const gameData = {
             rooms: [
                 {
                     name: "The Creepy Conservatory",
-                    background: "images/conservatory-background.jpg", // Main conservatory background
-                    // NOTE: Replace this URL with your own image for the conservatory background
-                    ambience: "gallery-ambience", // Reusing gallery ambience
+                    background: "images/conservatory-background.jpg", 
+                    ambience: "gallery-ambience", 
                     questions: [
                         {
                             text: "Why are the plants dying despite the water?",
                             background: "images/dying-plants.jpg", 
-                            // NOTE: Replace this URL with your own image of dying plants
                             options: [
                                 { text: "Someone has been poisoning them.", correct: true },
                                 { text: "Someone have been poisoning them.", correct: false },
@@ -866,17 +854,15 @@ const gameData = {
                         {
                             text: "Why is there soil on the floor?",
                             background: "images/soil-on-floor.jpg", 
-                            // NOTE: Replace this URL with your own image of soil on floor
                             options: [
-                                { text: "The gardener has been replanting at night.", correct: true },
                                 { text: "The gardener have been replanting at night.", correct: false },
-                                { text: "The gardener has replanted at night.", correct: false }
+                                { text: "The gardener has replanted at night.", correct: false },
+                                { text: "The gardener has been replanting at night.", correct: true }
                             ]
                         },
                         {
                             text: "Why are there scratches on the glass roof?",
                             background: "images/glass-roof.jpg", 
-                            // NOTE: Replace this URL with your own image of scratched glass roof
                             options: [
                                 { text: "Someone has been trying to break in from above.", correct: true },
                                 { text: "Someone have been trying to break in from above.", correct: false },
@@ -888,37 +874,33 @@ const gameData = {
                 },
                 {
                     name: "The Master Bedroom",
-                    background: "images/bedroom-background.jpg", // Main bedroom background
-                    // NOTE: Replace this URL with your own image for the bedroom background
-                    ambience: "attic-ambience", // Reusing attic ambience
+                    background: "images/bedroom-background.jpg", 
+                    ambience: "attic-ambience",
                     questions: [
                         {
                             text: "Why is the jewelry box empty?",
                             background: "images/jewelry-box.jpg", 
-                            // NOTE: Replace this URL with your own image of empty jewelry box
                             options: [
-                                { text: "The thief has been collecting valuable items.", correct: true },
                                 { text: "The thief have been collecting valuable items.", correct: false },
+                                { text: "The thief has been collecting valuable items.", correct: true },
                                 { text: "The thief has collected valuable items.", correct: false }
                             ]
                         },
                         {
                             text: "Why are there marks on the wall safe?",
                             background: "images/marked-wall-safe.jpg", 
-                            // NOTE: Replace this URL with your own image of marked wall safe
                             options: [
-                                { text: "Someone has been trying to crack the code.", correct: true },
                                 { text: "Someone have been trying to crack the code.", correct: false },
-                                { text: "Someone has tried to crack the code.", correct: false }
+                                { text: "Someone has tried to crack the code.", correct: false },
+                                { text: "Someone has been trying to crack the code.", correct: true }
                             ]
                         },
                         {
                             text: "Why is the bed unmade?",
                             background: "images/bed-unmade.jpg", 
-                            // NOTE: Replace this URL with your own image of unmade bed
                             options: [
-                                { text: "The suspect has been hiding under the covers.", correct: true },
                                 { text: "The suspect have been hiding under the covers.", correct: false },
+                                { text: "The suspect has been hiding under the covers.", correct: true },
                                 { text: "The suspect has hid under the covers.", correct: false }
                             ]
                         }
@@ -928,11 +910,10 @@ const gameData = {
             ]
         }
     ],
-    // End of levels data - CORRECTED POSITION OF ENDING OBJECT
+    // End of levels data
     // Game ending configuration
     ending: {
         background: "images/congratulations2.jpg", // Final scene background
-        // NOTE: Replace this URL with your own image for the final scene background
         message: "You've solved the mystery! The 'ghost' is actually the librarian Mr. Pawsworth, who has been searching for a hidden treasure in the mansion. Thank you for helping Scoobi Paw solve this case!"
     }
 };
@@ -1125,6 +1106,27 @@ function createImprovedRoomScreen(level, levelIndex, room, roomIndex) {
     levelIndicator.textContent = level.name;
     roomScreen.appendChild(levelIndicator);
 
+    // Add requirement indicator to explain the clue requirement
+    const requirementIndicator = document.createElement('div');
+    requirementIndicator.className = 'requirement-indicator';
+    requirementIndicator.style.position = 'absolute';
+    requirementIndicator.style.bottom = '80px';
+    requirementIndicator.style.right = '20px';
+    requirementIndicator.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    requirementIndicator.style.color = 'white';
+    requirementIndicator.style.padding = '10px 15px';
+    requirementIndicator.style.borderRadius = '10px';
+    requirementIndicator.style.fontSize = '0.9rem';
+    requirementIndicator.style.zIndex = '85';
+    requirementIndicator.style.border = '1px solid var(--main-color)';
+    requirementIndicator.innerHTML = `<i class="fas fa-info-circle"></i> Need ${requiredCorrectAnswers} correct answers to discover a clue`;
+    
+    roomScreen.appendChild(requirementIndicator);
+
+
+    createRequirementTooltip(roomScreen);
+
+
     // Barra de progreso (centrada)
     const progressContainer = document.createElement('div');
     progressContainer.className = 'progress-container';
@@ -1136,7 +1138,7 @@ function createImprovedRoomScreen(level, levelIndex, room, roomIndex) {
 
     const progressText = document.createElement('div');
     progressText.className = 'progress-text';
-    progressText.textContent = `Progress: 0/${totalQuestions}`;
+    progressText.textContent = `SCORE: 0/${totalQuestions}`;
     progressContainer.appendChild(progressText);
 
     // Insignia de dificultad
@@ -1247,6 +1249,9 @@ function showScreen(screen) {
 // Function to show the current room
 // Modificar la función showCurrentRoom
 function showCurrentRoom() {
+    // Reset the counter for the new room
+    correctAnswersInCurrentRoom = 0;
+    
     // Detener sonidos ambientales anteriores
     Object.values(ambienceSounds).forEach(sound => {
         sound.pause();
@@ -1262,19 +1267,144 @@ function showCurrentRoom() {
         showScreen(currentRoomScreen);
         updateQuestionDisplay();
         updateProgressBar();
+        updateRoomProgress(); // Initialize room progress indicator
         
         // Reproducir sonido ambiental
         const currentRoomData = gameData.levels[currentLevel].rooms[currentRoom];
         if (currentRoomData.ambience && ambienceSounds[currentRoomData.ambience]) {
             currentAmbience = ambienceSounds[currentRoomData.ambience];
             currentAmbience.volume = 0.3;
-            // Usar esta forma simplificada
             if (AudioController.soundEffectsEnabled) {
                 currentAmbience.play().catch(e => console.log("Could not play ambience:", e));
             }
         }
     }
 }
+
+
+
+function updateRoomProgress() {
+    const currentRoomScreen = roomScreens.find(screen => 
+        parseInt(screen.dataset.level) === currentLevel && 
+        parseInt(screen.dataset.room) === currentRoom
+    );
+    
+    if (currentRoomScreen) {
+        // Check if the room progress indicator exists, create if not
+        let roomProgressIndicator = currentRoomScreen.querySelector('.room-progress');
+        if (!roomProgressIndicator) {
+            roomProgressIndicator = document.createElement('div');
+            roomProgressIndicator.className = 'room-progress';
+            
+            // Pre-position it precisely to avoid any movement
+            roomProgressIndicator.style.position = 'absolute';
+            roomProgressIndicator.style.top = '75px';
+            roomProgressIndicator.style.left = '50%';
+            roomProgressIndicator.style.transform = 'translateX(-50%)';
+            
+            // Apply styles directly in JS to ensure proper positioning
+            roomProgressIndicator.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            roomProgressIndicator.style.color = 'white';
+            roomProgressIndicator.style.padding = '8px 15px';
+            roomProgressIndicator.style.borderRadius = '10px';
+            roomProgressIndicator.style.fontSize = '1rem';
+            roomProgressIndicator.style.fontWeight = 'bold';
+            roomProgressIndicator.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.5)';
+            roomProgressIndicator.style.zIndex = '95';
+            roomProgressIndicator.style.border = '2px solid #ff9100';
+            
+            // Important: Add it to the DOM before updating content
+            currentRoomScreen.appendChild(roomProgressIndicator);
+            
+            // Ensure it's fully ready before any animations
+            // Force a reflow to make sure styles are applied
+            void roomProgressIndicator.offsetWidth;
+        }
+        
+        // Update the text with progress
+        const isComplete = correctAnswersInCurrentRoom >= requiredCorrectAnswers;
+        roomProgressIndicator.innerHTML = `
+            <i class="fas fa-search"></i> Clue Progress: 
+            <span style="color: ${isComplete ? '#4CAF50' : '#ff9100'}; font-weight: bold;">
+                ${correctAnswersInCurrentRoom}/${requiredCorrectAnswers} correct
+            </span>
+            ${isComplete ? ' <i class="fas fa-check-circle"></i>' : ''}
+        `;
+    }
+}
+
+// Additional function to ensure element is properly positioned on screen change
+function ensureProperPositioning() {
+    // This function should be called after showing a new room screen
+    const roomProgressIndicators = document.querySelectorAll('.room-progress');
+    roomProgressIndicators.forEach(indicator => {
+        // Reset any transforms or animations that might be causing the issue
+        indicator.style.transition = 'none';
+        indicator.style.animation = 'none';
+        indicator.style.left = '50%';
+        indicator.style.transform = 'translateX(-50%)';
+        
+        // Force a reflow
+        void indicator.offsetWidth;
+    });
+}
+
+function createRequirementTooltip(roomScreen) {
+    // Remove existing indicator if it exists
+    const existingIndicator = roomScreen.querySelector('.requirement-indicator');
+    if (existingIndicator) {
+        existingIndicator.remove();
+    }
+    
+    // Create a new, more compact tooltip
+    const requirementTooltip = document.createElement('div');
+    requirementTooltip.className = 'requirement-indicator';
+    
+    // Position it in a better spot
+    requirementTooltip.style.position = 'absolute';
+    requirementTooltip.style.bottom = '150px'; // Higher position
+    requirementTooltip.style.right = '20px';
+    
+    // Improved styling
+    requirementTooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    requirementTooltip.style.color = 'white';
+    requirementTooltip.style.padding = '10px';
+    requirementTooltip.style.borderRadius = '10px';
+    requirementTooltip.style.fontSize = '0.9rem';
+    requirementTooltip.style.maxWidth = '180px'; // Limit width for better appearance
+    requirementTooltip.style.textAlign = 'center';
+    requirementTooltip.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.6)';
+    requirementTooltip.style.zIndex = '90';
+    requirementTooltip.style.border = '2px solid #ff9100'; // Use secondary color for distinction
+    requirementTooltip.style.position = 'absolute';
+    requirementTooltip.style.bottom = '50px'; // Cambia este valor para mover arriba/abajo
+    requirementTooltip.style.right = '50px';
+    
+    // Add an icon and more concise text
+    requirementTooltip.innerHTML = `
+        <i class="fas fa-info-circle" style="color: #ff9100; font-size: 1.2rem; margin-bottom: 5px; display: block;"></i>
+        Need ${requiredCorrectAnswers} correct answers to discover a clue
+    `;
+    
+    // Add a subtle animation
+    requirementTooltip.style.animation = 'fadeIn 0.5s ease-out';
+    
+    roomScreen.appendChild(requirementTooltip);
+    
+    // Optional: Add a hover effect for better user experience
+    requirementTooltip.addEventListener('mouseenter', () => {
+        requirementTooltip.style.transform = 'scale(1.05)';
+        requirementTooltip.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.7)';
+    });
+    
+    requirementTooltip.addEventListener('mouseleave', () => {
+        requirementTooltip.style.transform = 'scale(1)';
+        requirementTooltip.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.6)';
+    });
+    
+    return requirementTooltip;
+}
+
 
 // Function to update the progress bar
 function updateProgressBar() {
@@ -1289,7 +1419,7 @@ function updateProgressBar() {
         const progressPercentage = (score / totalQuestions) * 100;
         
         progressBar.style.width = `${progressPercentage}%`;
-        progressText.textContent = `Progress: ${score}/${totalQuestions}`;
+        progressText.textContent = `SCORE: ${score}/${totalQuestions}`;
     }
 }
 
@@ -1349,6 +1479,7 @@ function updateQuestionDisplay() {
 }
 
 // Function to handle option clicks
+// Function to handle option clicks
 function handleOptionClick(event) {
     const optionIndex = parseInt(event.target.dataset.index);
     const currentRoomData = gameData.levels[currentLevel].rooms[currentRoom];
@@ -1359,29 +1490,47 @@ function handleOptionClick(event) {
     const options = document.querySelectorAll('.option');
     options.forEach(opt => opt.style.pointerEvents = 'none');
     
+    const currentRoomScreen = roomScreens.find(screen => 
+        parseInt(screen.dataset.level) === currentLevel && 
+        parseInt(screen.dataset.room) === currentRoom
+    );
+    
+    const character = currentRoomScreen.querySelector('.character');
+    const dialogBox = currentRoomScreen.querySelector('.dialog-box');
+    
     // Show correct/incorrect result
     if (isCorrect) {
         event.target.classList.add('correct');
         AudioManager.play('correct-sound');
-        score++;
+        score++; // Increment overall score
+        correctAnswersInCurrentRoom++; // Track correct answers in this room
         updateProgressBar();
-        
-        const currentRoomScreen = roomScreens.find(screen => 
-            parseInt(screen.dataset.level) === currentLevel && 
-            parseInt(screen.dataset.room) === currentRoom
-        );
-        
-        const character = currentRoomScreen.querySelector('.character');
-        const dialogBox = currentRoomScreen.querySelector('.dialog-box');
+        updateRoomProgress(); // Update the room progress indicator
         
         dialogBox.textContent = 'Correct! Let\'s continue investigating.';
+    } else {
+        event.target.classList.add('incorrect');
+        AudioManager.play('wrong-sound');
         
-        // Advance to the next question or room after a delay
+        character.classList.add('scared');
+        dialogBox.textContent = 'That\'s not right, but let\'s continue anyway.';
+        
+        // Remove scared animation after a delay
         setTimeout(() => {
-            currentQuestion++;
+            character.classList.remove('scared');
+        }, 1500);
+    }
+    
+    // Advance to the next question or room after a delay
+    setTimeout(() => {
+        currentQuestion++;
+        
+        // If we completed all questions in this room
+        if (currentQuestion >= currentRoomData.questions.length) {
+            // Check if player has enough correct answers to discover the clue
+            const clueDiscovered = correctAnswersInCurrentRoom >= requiredCorrectAnswers;
             
-            // If we completed all questions in this room
-            if (currentQuestion >= currentRoomData.questions.length) {
+            if (clueDiscovered) {
                 // Add discovered clue
                 discoveredClues.push({
                     room: currentRoomData.name,
@@ -1396,66 +1545,58 @@ function handleOptionClick(event) {
                 // Show room completion celebration
                 AudioManager.play('level-complete-sound');
                 createConfetti();
-                
-                // Move to the next room or level after a delay
-                setTimeout(() => {
-                    currentQuestion = 0;
-                    currentRoom++;
-                    
-                    // If we completed all rooms in this level
-                    if (currentRoom >= gameData.levels[currentLevel].rooms.length) {
-                        currentRoom = 0;
-                        currentLevel++;
-                        
-                        // If we completed all levels
-                        if (currentLevel >= gameData.levels.length) {
-                            console.log("All levels completed, showing ending screen");
-                            showEndingScreen();
-                            return;
-                        }
-                    }
-                    
-                    showCurrentRoom();
-                }, 3000);
             } else {
-                // Go to the next question
-                updateQuestionDisplay();
+                // Not enough correct answers to discover the clue
+                dialogBox.textContent = `You need at least ${requiredCorrectAnswers} correct answers to discover a clue. No clue found!`;
+                
+                // Optional: A subtle indication of failure
+                character.classList.add('scared');
+                setTimeout(() => {
+                    character.classList.remove('scared');
+                }, 1500);
             }
-        }, 1500);
-    } else {
-        event.target.classList.add('incorrect');
-        AudioManager.play('wrong-sound');
-        
-        const currentRoomScreen = roomScreens.find(screen => 
-            parseInt(screen.dataset.level) === currentLevel && 
-            parseInt(screen.dataset.room) === currentRoom
-        );
-        
-        const character = currentRoomScreen.querySelector('.character');
-        const dialogBox = currentRoomScreen.querySelector('.dialog-box');
-        
-        character.classList.add('scared');
-        dialogBox.textContent = 'Oh no! That\'s not right. Let\'s try again.';
-        
-        // Remove scared animation after a delay
-        setTimeout(() => {
-            character.classList.remove('scared');
             
-            // Re-enable options
-            options.forEach(opt => {
+            // Move to the next room or level after a delay
+            setTimeout(() => {
+                currentQuestion = 0;
+                correctAnswersInCurrentRoom = 0; // Reset for next room
+                currentRoom++;
+                
+                // If we completed all rooms in this level
+                if (currentRoom >= gameData.levels[currentLevel].rooms.length) {
+                    currentRoom = 0;
+                    currentLevel++;
+                    
+                    // If we completed all levels
+                    if (currentLevel >= gameData.levels.length) {
+                        console.log("All levels completed, showing ending screen");
+                        showEndingScreen();
+                        return;
+                    }
+                }
+                
+                showCurrentRoom();
+            }, 3000);
+        } else {
+            // Go to the next question
+            updateQuestionDisplay();
+            
+            // Re-enable option clicks for the new question
+            const newOptions = document.querySelectorAll('.option');
+            newOptions.forEach(opt => {
                 opt.style.pointerEvents = 'auto';
-                opt.classList.remove('incorrect');
             });
-        }, 1500);
-    }
+        }
+    }, 1500);
 }
 
-// Reemplaza la función showEndingScreen por esta versión mejorada
-// Reemplaza la función showEndingScreen por esta versión mejorada con certificado
+
+
+// Updated showEndingScreen function with fixed certificate styling
 function showEndingScreen() {
     console.log("Showing ending screen");
     
-    // Detener sonidos ambientales
+    // Stop ambient sounds
     Object.values(ambienceSounds).forEach(sound => {
         if (sound && typeof sound.pause === 'function') {
             sound.pause();
@@ -1463,31 +1604,80 @@ function showEndingScreen() {
         }
     });
     
-    // Reproducir sonido de victoria
-    AudioManager.play('game-complete-sound');
+    // Play victory sound based on score
+    if (score >= 12) {
+        AudioManager.play('game-complete-sound');
+    } else {
+        // For lower scores
+        AudioManager.play('level-complete-sound');
+    }
     
-    // Efectos visuales
-    createConfetti();
-    createFireworks();
+    // Visual effects based on score
+    if (score >= 12) {
+        createConfetti();
+        createFireworks();
+    }
     
-    // Construir el contenido de la pantalla final
+    // Calculate score class
+    const getScoreClass = (score, total) => {
+        const percentage = Math.round((score / total) * 100);
+        if (percentage >= 80) return 'score-high';
+        if (percentage >= 50) return 'score-medium';
+        return 'score-low';
+    };
+    
+    // Build the final screen content
     if (finalMessage) {
         const percentage = Math.round((score / totalQuestions) * 100);
+        const scoreClass = getScoreClass(score, totalQuestions);
         
-        // Crear HTML con mejor estructura
+        // Determine certificate type
+        const isSuccess = score >= 12; // At least 50% correct
+        
+        // Create HTML with conditional structure for the certificate
         finalMessage.innerHTML = `
-            <h2 class="final-title">Case Solved!</h2>
-            <p>Congratulations, ${playerName}! You've solved the mystery!</p>
+            <h2 class="final-title">${isSuccess ? 'Case Solved!' : 'Mystery Incomplete'}</h2>
+            <p>${isSuccess 
+                ? `Congratulations, ${playerName}! You've solved the mystery!` 
+                : `Good try, ${playerName}! You discovered some clues, but the mystery remains partially unsolved.`}
+            </p>
             <p>The 'ghost' is actually the librarian Mr. Pawsworth, who has been searching for a hidden treasure in the mansion.</p>
             
-            <div class="achievement-certificate">
-                <div class="certificate-title">Detective Certificate</div>
-                <p>This certifies that</p>
-                <p style="font-size: 1.8rem; font-weight: bold; margin: 10px 0;">${playerName}</p>
-                <p>has successfully solved the Mystery of the Abandoned Mansion</p>
-                <p>with <span style="font-weight: bold; color: #ff9100">${score}</span> out of <span style="font-weight: bold;">${totalQuestions}</span> correct answers (${percentage}%)</p>
+            <div class="achievement-certificate ${!isSuccess ? 'certificate-incomplete' : ''}">
+                <!-- Corner decorations -->
+                <div class="certificate-corner corner-top-left"></div>
+                <div class="certificate-corner corner-top-right"></div>
+                <div class="certificate-corner corner-bottom-left"></div>
+                <div class="certificate-corner corner-bottom-right"></div>
+                
+                <!-- Seal/Badge - positioned differently based on success/failure -->
                 <div class="certificate-seal">
-                    <i class="fas fa-medal"></i>
+                    <i class="fas ${isSuccess ? 'fa-medal' : 'fa-hourglass-half'}"></i>
+                </div>
+                
+                <!-- Main content -->
+                <div class="certificate-title">
+                    ${isSuccess ? 'Detective Certificate' : 'Apprentice Detective Certificate'}
+                </div>
+                
+                <div class="certificate-content">
+                    <p class="certificate-text">This certifies that</p>
+                    <p class="certificate-name">${playerName}</p>
+                    <div class="certificate-name-underline"></div>
+                    <p class="certificate-text">
+                        ${isSuccess 
+                            ? 'has successfully solved the Mystery of the Abandoned Mansion' 
+                            : 'has attempted to solve the Mystery of the Abandoned Mansion'}
+                    </p>
+                    <p class="certificate-score">
+                        with <span class="certificate-number ${scoreClass}">${score}</span> 
+                        out of <span class="certificate-number">${totalQuestions}</span> 
+                        correct answers (${percentage}%)
+                    </p>
+                    ${!isSuccess ? `
+                    <p class="try-again-message">
+                        <i class="fas fa-redo"></i> Why not try again to become a Master Detective?
+                    </p>` : ''}
                 </div>
             </div>
             
@@ -1502,21 +1692,21 @@ function showEndingScreen() {
         `;
     }
     
-    // Establecer fondo
+    // Set background
     if (finalScreen && gameData.ending && gameData.ending.background) {
         finalScreen.style.backgroundImage = `url(${gameData.ending.background})`;
     }
     
-    // Mostrar pantalla
+    // Show screen
     showScreen(finalScreen);
     
-    // Asegurar visibilidad de controles
+    // Ensure controls are visible
     const floatingControls = document.getElementById('floating-controls');
     if (floatingControls) {
         floatingControls.style.display = 'flex';
     }
     
-    // Scroll al inicio para asegurar que se vea todo
+    // Scroll to top
     setTimeout(() => {
         finalScreen.scrollTop = 0;
     }, 100);
@@ -1616,14 +1806,17 @@ function getFinalRating() {
         return "Great job detective! You've helped solve the mystery.";
     } else if (percentage >= 50) {
         return "You've helped solve the mystery, but you need more practice with Present Perfect Continuous.";
+    } else if (percentage >= 30) {
+        return "You found some important clues, but the mystery isn't fully solved. Keep practicing!";
     } else {
-        return "You found the culprit, but with a bit of luck. Keep practicing!";
+        return "You've just begun your detective journey. Practice your grammar and try again!";
     }
 }
 
 // Event to start the game
 // Evento para iniciar el juego
 startBtn.addEventListener('click', () => {
+    correctAnswersInCurrentRoom = 0;
     playerName = playerNameInput.value.trim() || 'Detective';
     createRoomScreens();
     currentLevel = 0;
@@ -1948,6 +2141,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (floatingControls) {
         floatingControls.style.display = 'flex';
     }
+
+    // Initialize clue requirement variables
+    correctAnswersInCurrentRoom = 0;
     
     setupTitleBackground();
     // Mostrar el preloader

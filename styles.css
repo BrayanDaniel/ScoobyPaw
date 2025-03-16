@@ -239,7 +239,7 @@ h3 {
 /* Indicador de nivel */
 .level-indicator {
     position: absolute;
-    top: 20px;
+    top: 2px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 1.2rem;
@@ -387,9 +387,9 @@ h3 {
 .btn-hint {
     position: absolute;
     top: auto;
-    bottom: 400px;
-    right: 60px;
-    background-color: var(--main-color-dark);
+    bottom: 375px;
+    right: 65px;
+    background-color: var(--main-color);
     padding: 10px 20px;
     font-size: 1rem;
     z-index: 50;
@@ -397,9 +397,9 @@ h3 {
 }
 
 .btn-hint:hover {
-    background-color: #4370ff; /* Color ligeramente más claro */
-    transform: translateY(-3px); /* Movimiento sutil hacia arriba */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #ffb347;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Si el botón tiene otro nombre de clase, ajústalo según corresponda */
@@ -592,7 +592,7 @@ button[id*="clue"]:hover {
 /* Barra de progreso */
 .progress-container {
     position: absolute;
-    top: 70px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
     width: 300px;
@@ -651,8 +651,8 @@ button[id*="clue"]:hover {
 /* Asegurar que Easy está bien posicionado */
 .difficulty-badge {
     position: absolute;
-    top: 20px;
-    right: 20px; /* Reducir este valor para moverlo más a la derecha */
+    top: 115px;
+    right: 100px; /* Reducir este valor para moverlo más a la derecha */
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 0.9rem;
@@ -1163,7 +1163,7 @@ button[id*="clue"]:hover {
 /* Ajustar posición del cuadro de diálogo/pista */
 .dialog-box {
     position: absolute;
-    bottom: 250px; /* Mover mucho más arriba para que no tape al personaje */
+    bottom: 180px; /* Mover mucho más arriba para que no tape al personaje */
     left: 20px;
     width: 250px;
     background-color: rgba(0, 0, 0, 0.9);
@@ -1175,6 +1175,11 @@ button[id*="clue"]:hover {
     box-shadow: var(--shadow);
     animation: fadeIn 0.3s ease-out;
     z-index: 10;
+}
+
+.dialog-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
 }
 
 /* Ajustar la flecha del cuadro de diálogo */
@@ -1222,46 +1227,193 @@ button[id*="clue"]:hover {
     box-shadow: var(--shadow), 0 0 20px rgba(255, 145, 0, 0.3);
 }
 
-/* Mejorar el certificado */
+/* Estilos mejorados para el certificado - Versión revisada */
 .achievement-certificate {
-    background: linear-gradient(135deg, #2c3e50, #4a6572);
-    border: 5px solid #ffb347;
-    border-radius: 10px;
-    padding: 20px;
+    background: linear-gradient(to bottom right, #FFD700, #FFA500); /* Fondo dorado brillante */
+    border: 5px solid #ff9100;
+    border-radius: 15px;
+    padding: 30px;
     margin: 20px auto;
     width: 90%;
     max-width: 600px;
     position: relative;
     text-align: center;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    color: #333;
+}
+
+/* Añadir textura al fondo */
+.achievement-certificate::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/pergamino.jpg'); /* Textura de papel o pergamino */
+    background-size: cover;
+    opacity: 0.1;
+    pointer-events: none;
+    border-radius: 10px;
+    z-index: 1;
 }
 
 .certificate-title {
     font-family: 'Creepster', cursive;
-    font-size: 2rem;
-    color: #ffb347;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
+    font-size: 2.5rem;
+    color: #8B0000 !important; /* Using !important to override any inline styles */
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+  }
 
-.certificate-seal {
+  .certificate-seal {
     position: absolute;
-    right: 30px;
-    bottom: 30px;
-    width: 80px;
-    height: 80px;
+    right: 35px;
+    top: 100px;
+    width: 90px;
+    height: 90px;
     background-color: #e74c3c;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    border: 3px solid #fff;
+    z-index: 3;
+  }
+  
+  .certificate-seal i {
+    font-size: 2.8rem;
+    color: #fff;
+  }
+
+.certificate-content {
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.certificate-seal i {
-    font-size: 2.5rem;
-    color: #fff;
+/* Corrección para el estilo del nombre en el certificado */
+/* Estilo mejorado para el nombre en el certificado */
+.certificate-name {
+    /* Tamaño y espaciado */
+    font-size: 2.8rem;
+    font-weight: bold;
+    margin: 20px 0;
+    padding: 5px 0;
+    
+    /* Color principal */
+    color: #C70000; /* Rojo sólido intenso */
+    
+    /* Tipografía especial - usar una fuente más elegante */
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    
+    /* Espaciado y transformación */
+    letter-spacing: 2px;
+    text-transform: capitalize;
+    
+    /* Efectos de texto avanzados */
+    text-shadow: 
+        2px 2px 0px rgba(0, 0, 0, 0.3),
+        0px 0px 10px rgba(255, 150, 0, 0.2);
+    
+    /* Borde fino dorado */
+    -webkit-text-stroke: 1px rgba(255, 215, 0, 0.3);
+    text-stroke: 1px rgba(255, 215, 0, 0.3);
+    
+    /* Posicionamiento */
+    position: relative;
+    display: inline-block;
 }
+
+/* Añadir líneas decorativas a los lados */
+.certificate-name::before,
+.certificate-name::after {
+    content: "★";
+    color: #FFD700; /* Dorado */
+    font-size: 1.5rem;
+    position: relative;
+    top: -5px;
+    margin: 0 15px;
+    text-shadow: 0px 0px 5px rgba(255, 150, 0, 0.5);
+}
+
+/* Añadir un subrayado decorativo con gradiente */
+.certificate-name-underline {
+    display: block;
+    height: 3px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: -5px;
+    margin-bottom: 15px;
+    background: linear-gradient(to right, 
+        rgba(199, 0, 0, 0),
+        rgba(199, 0, 0, 0.8) 20%,
+        rgba(199, 0, 0, 1) 50%,
+        rgba(199, 0, 0, 0.8) 80%,
+        rgba(199, 0, 0, 0));
+    border-radius: 50%;
+}
+
+/* Importar la fuente si no está disponible */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+.certificate-text {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.certificate-score {
+    font-size: 1.4rem;
+    margin: 15px 0;
+}
+
+.certificate-score-value {
+    font-weight: bold;
+    color: #ff9100;
+    font-size: 1.6rem;
+}
+
+
+
+/* Efecto de brillo para el certificado */
+.achievement-certificate {
+    animation: certificate-glow 3s infinite alternate;
+}
+
+@keyframes certificate-glow {
+    0% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); }
+    100% { box-shadow: 0 10px 30px rgba(255, 145, 0, 0.7), 0 0 50px rgba(255, 145, 0, 0.4); }
+}
+
+/* Números resaltados */
+.certificate-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #FF4500;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para puntaje con diferentes colores según el porcentaje */
+.score-low {
+    color: #e74c3c;
+}
+
+.score-medium {
+    color: #f39c12;
+}
+
+.score-high {
+    color: #2ecc71;
+}   
 
 /* Para pantallas más pequeñas */
 @media (max-width: 768px) {
@@ -1325,8 +1477,8 @@ button[id*="clue"]:hover {
 /* Botón "Play Again" en la esquina inferior derecha */
 .play-again-btn {
     position: fixed;
-    bottom: 20px;
-    right: 55px;
+    bottom: 300px;
+    right: 66px;
     background-color: var(--main-color);
     color: #000;
     border: none;
@@ -1583,3 +1735,79 @@ button[id*="clue"]:hover {
         padding: 10px 15px;
     }
 }
+
+
+/* Estilos para el certificado incompleto */
+.certificate-incomplete {
+    background: linear-gradient(to bottom right, #d3d3d3, #a9a9a9);
+    border: 5px solid #a0a0a0;
+  }
+
+.certificate-incomplete .certificate-title {
+    color: #8B0000; /* Rojo oscuro */
+}
+
+.certificate-incomplete .certificate-seal {
+    position: absolute;
+    right: 35px;
+    top: 100px; /* Moved lower to avoid overlapping with title */
+    width: 90px;
+    height: 90px;
+    background-color: #888888;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    border: 3px solid #fff;
+    z-index: 3;
+  }
+
+.certificate-incomplete .certificate-corner {
+    opacity: 0.5; /* Adornos más transparentes */
+}
+
+.try-again-message {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: rgba(255, 145, 0, 0.15);
+    border-radius: 8px;
+    color: #ff8c00;
+    font-weight: bold;
+}
+
+.try-again-message i {
+    margin-right: 8px;
+    animation: spin 2s infinite linear;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.room-progress {
+    position: absolute;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 95;
+    border: 2px solid var(--main-color);
+    
+    /* Remove any animations or transitions that might cause movement */
+    animation: none !important;
+    transition: none !important;
+}
+
